@@ -1,0 +1,230 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" ng-app>
+<head>
+    <meta charset="utf-8" />
+
+
+    <link href="js/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <script src="js/bootstrap/js/bootstrap.js"></script>
+
+    <link href="js/fontawesome/css/all.css" rel="stylesheet">
+    <script src="js/fontawesome/js/all.js"></script>
+
+    <link href="css/estilos.css" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <title>Editar Cronograma</title>
+</head>
+<body>
+    <!--
+
+
+        https://ourcodeworld.co/articulos/leer/434/top-5-los-mejores-plugins-de-jquery-y-javascript-de-diagramas-de-gantt-dinamicos-para-aplicaciones-web
+        https://github.com/oguzhanoya/jquery-gantt
+        -->
+  
+
+    <div id="miApp">
+        <div class="panelcontrol">
+
+            <div class="control">
+                CRONOGRAMA
+                <select v-on:change="cambio_sisstema()" v-model="sistema_seleccionadoid">
+                    <option v-for="(sistema, sistemasid) in sistemas" v-bind:value="sistemasid">{{ sistema.nombre }}</option>
+                </select>
+            </div>
+
+
+
+
+            <div class="control">
+
+                <select v-model="messeleccionado">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                </select>
+                &nbsp; DEL AÑO &nbsp; <input type="number" v-model="ano" maxlength="4" style="width:100px;" />
+
+                <button v-on:click="CrearCrono()">CREAR</button>
+                <input v-if="sistemas[sistema_seleccionadoid].fecha_final" v-model="fecha_final_seleccionada" type="date" />
+            </div>
+        </div>
+
+        <div class="clsZonaEdit">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-1" v-for="(parte, parteid) in sistemas[sistema_seleccionadoid].partes">
+                    <b> {{ parte.nombre }}</b>
+                </div>
+            </div>
+            <template v-for="(mes, mesid) in meses">
+
+                <div class="row rowmes">
+                    <div class="col-md-2">
+                        <b>{{ nombre_mes(mes.mes) }} {{ mes.ano }}</b>
+                    </div>
+
+                    <div class="col-md-1" v-for="(parte, parteid) in mes.partes">
+                        <div v-if="!mes.editando">
+                            {{ formatDateDDMM(parte.desde) }}
+                            <span v-if="parte.desde.getDate() != parte.hasta.getDate()">al {{ formatDateDDMM(parte.hasta) }}</span>
+                        </div>
+
+                        <div v-if="mes.editando">
+                            <table>
+                                <tr>
+                                    <th>Desde</th>
+                                    <th>Hasta</th>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <input type="number" v-on:change="Modifico_Crono(mes)" style="width: 40px;" v-model="mes.modelo_partes[parteid].desde_diahabil" />
+                                    </td>
+                                    <td>
+                                        <input type="number" v-on:change="Modifico_Crono(mes)" style="width: 40px;" v-model="mes.modelo_partes[parteid].hasta_diahabil" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>{{ formatDateShort(parte.desde) }}</td>
+                                    <td>{{ formatDateShort(parte.hasta) }}</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                    </div>
+                    <div class="col-md-1" v-if="sistemas[mes.sistema].fecha_final">
+                        <span v-if="!mes.editando">{{ formatDateDDMM(mes.fecha_final.replace('-','/')) }}</span>
+                        <input type="date" v-if="mes.editando" v-model="mes.fecha_final" v-on:change="Modifico_Crono(mes)" />
+                    </div>
+                    
+                    <div class="col-md-1"></div>
+
+                    <div class="col-md-1">
+                        <div class="botonera">
+
+                            <div class="boton" alt="aaa" v-if="!mes.editando" v-on:click="Click_EditarCrono(mes)">
+                                <i class="fa fa-pencil-square" aria-hidden="true"></i>
+                            </div>
+                            <div class="boton_apretado" v-if="mes.editando" v-on:click="Click_ConfirmarCrono(mes)">
+                                <i class="fa fa-pencil-square" aria-hidden="true"></i>
+                            </div>
+                            <div class="boton" v-on:click="Click_VerAlmanaque(mes)">
+                                <i class="fa fa-calendar" aria-hidden="true"></i>
+                            </div>
+                            <div class="boton" v-on:click="Click_VerDetalle(mes)">
+                                <i class="fa fa-file-text" aria-hidden="true" ></i>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+                <div class="row rowrangos" v-if="mes.editando">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+
+
+
+
+
+
+                        <div v-for="(parte, parteid) in mes.partes">
+                            <div class="row">
+
+                                <div class=''>
+                                    <input type="range" min="-5" max="30" step="1" class="inputrange" v-bind:style="estilo_range(parte)" v-on:change="Modifico_Crono(mes)" v-model="mes.modelo_partes[parteid].desde_diahabil">
+                                    <input type="range" min="-5" max="30" step="1" class="inputrange" v-bind:style="estilo_range(parte)" v-on:change="Modifico_Crono(mes)" v-model="mes.modelo_partes[parteid].hasta_diahabil">
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="row rowcabeceradetalle" v-if="mes.viendodetalle">
+                    <ul class="nav nav-pills">
+                        <li class="nav-item" v-for="(parte, parteid) in sistemas[sistema_seleccionadoid].partes" v-if="parte.detalle.length > 0">
+                            <a class="nav-link" v-on:click="Click_VerDetalleId(mes, parteid)" v-bind:class="{ active: parteid == mes.viendodetalle_parte }" aria-current="page"> {{ parte.nombre }}</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="row rowcabeceradetalle" v-if="mes.viendodetalle">
+                    <div class="col-md-1"></div>
+
+                    <div class="col-md-9">
+                        <table>
+                            <tr>
+                                <th>Detalle</th>
+                                <th>Desde</th>
+                                <th>Hasta</th>
+                            </tr>
+                            <tr v-for="(det) in mes.partes[mes.viendodetalle_parte].detalle">
+                                <td>
+                                    {{ det.nombre.replace('%dd/mm/yyyy%', formatDateDDMM(mes.diashabiles[det.desde])) }}
+                                </td>
+                                <td> {{ formatDateDDMM(mes.diashabiles[det.desde]) }}</td>
+                                <td>{{ formatDateDDMM(mes.diashabiles[det.hasta]) }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div v-if="mes.viendoalmanaque" class="row rowalmanaque">
+                    <div class="col-md-4" v-for="mescalendario in GetCalendarios(mes)">
+                        <div class="colamanaque">
+
+                            <h3>{{ nombre_mes(mescalendario.mes) }}</h3>
+                            <table class="calendarioedit">
+                                <tr>
+                                    <th>D</th>
+                                    <th>L</th>
+                                    <th>M</th>
+                                    <th>M</th>
+                                    <th>J</th>
+                                    <th>V</th>
+                                    <th>S</th>
+                                </tr>
+                                <tr v-for="(semana, semanaid) in mescalendario.semana">
+                                    <td v-for="(dia, diaid) in semana.dias">
+                                        <div class="clsdiaedit" ondrop="drop(event)" ondragover="allowDrop(event)" v-if="dia.mostrar_dia" v-bind:style="estilo_dia(dia)" ondrop="alert(event)">
+                                            {{ dia.date.getDate() }}
+                                            <div v-for="evento in dia.eventos"
+                                                 class="eventoAlmanaque"
+                                                 v-bind:style="estilo_evento(mes, evento)" v-bind:draggable="esdrageable(mes, evento)">
+                                                {{ sininimo_sistema(evento) }}
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+
+            </template>
+        </div>
+    </div>
+
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script src="js/feriados.js"></script>
+    <script src="js/appEditor.js"></script>
+</body>
+</html>

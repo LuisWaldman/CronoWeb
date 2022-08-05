@@ -1,0 +1,198 @@
+﻿body
+{
+    background-color: rgb(250, 250, 251);
+}
+
+#miApp {
+    margin: 4px 10px;
+}
+
+.rowalmanaque {
+    padding: 0 30px 0 30px;
+}
+
+.colamanaque {
+    margin: 2px;
+    border: 1px solid;
+    padding: 5px;
+    -moz-border-radius: 7px;
+    -webkit-border-radius: 7px;
+}
+
+.clsZonaEdit {
+    margin: 5px 0px 0px 0px;
+    border: 1px solid;
+    padding: 5px;
+    -moz-border-radius: 7px;
+    -webkit-border-radius: 7px;
+}
+
+.clase {
+    display: block;
+    color: red;
+}
+.cssPoema {
+    display: flex;
+    flex-direction: column;
+}
+.cssVerso {
+    display: flex;
+    flex-direction: row;
+}
+
+.totalsilabas {
+    width: 150px;
+}
+
+.clsRimas {
+    display: flex;
+    flex-direction: row;
+}
+
+.clsRima {
+    display: block;
+    width: 80px;
+    border: 1px solid;
+    padding: 5px;
+
+}
+
+
+.clsPanel {
+    display: flex;
+    flex-direction: row;
+
+}
+
+.btnPanel {
+    display: block;
+    width: 80px;
+    border: 1px solid;
+    padding: 5px;
+    margin-left: 135px;
+}
+.filames {
+    font-size: 12px;
+}
+
+.nombremes {
+    font-size: 25px;
+}
+
+
+.panelcontrol {
+    background-color: #2596be;
+    display: flex;
+    border: solid 1px;
+    padding: 3px;
+    color: white;
+}
+
+input {
+
+}
+
+.control {
+    display: block;
+    border: solid 1px;
+    padding: 2px;
+}
+
+.rowcolumnas {
+    background-color: antiquewhite;
+    border: 1px solid;
+
+}
+
+.filames {
+    border: 1px solid;
+}
+
+
+.detaleCronogramas {
+    margin-top: 15px;
+    border: 1px solid;
+}
+
+.clsdia {
+    width: 95px;
+    height: 95px;
+    border: 1px solid;
+}
+
+.eventoAlmanaque {
+    border: 2px solid;
+    font-size: 9px;
+    padding: 3px;
+    margin: 2px;
+    cursor: move;
+}
+
+.clsdiaedit {
+    width: 60px;
+    height: 85px;
+    border: 1px solid;
+}
+
+.inputrange {
+    width: 100%;
+    display: block;
+    border: 1px solid;
+}
+
+
+.boton {
+    display: block;
+    border: 1px solid #2596be;
+    color: #2596be;
+    width: 35px;
+    height: 40px;
+    margin-left: 4px;
+    padding: 3px 6px;
+    font-size: 20px;
+    -moz-border-radius: 14px;
+    -webkit-border-radius: 14px;
+    cursor: pointer;
+}
+
+.boton_apretado {
+    display: block;
+    border: 1px solid #2596be;
+    color: white;
+    width: 35px;
+    height: 40px;
+    margin-left: 4px;
+    padding: 3px 6px;
+    font-size: 20px;
+    -moz-border-radius: 14px;
+    -webkit-border-radius: 14px;
+    cursor: pointer;
+    background-color: #2596be;
+}
+
+.boton :hover {
+    color: white;
+    background-color: #2596be;
+    -moz-border-radius: 14px;
+    -webkit-border-radius: 14px;
+}
+
+.botonera {
+    display: flex;
+}
+
+.rowmes {
+    border: 1px solid;
+    margin: 10px;
+    padding-top: 3px;
+}
+
+.rowcabeceradetalle {
+    border: 1px solid;
+    margin: 10px;
+    padding-top: 3px;
+}
+
+.calendarioedit th {
+    text-align: center
+}
